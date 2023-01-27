@@ -3,11 +3,17 @@ import Image from 'next/image'
 import { Inter } from '@next/font/google'
 import styles from '@/styles/Home.module.css'
 import { useSession, signIn, signOut } from "next-auth/react"
+import { useTheme } from "next-themes"
+import { BsSun, BsMoon } from 'react-icons/bs'
+
 
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
+  const { systemTheme, theme, setTheme } = useTheme();
+  const currentTheme = theme === 'system' ? systemTheme : theme;
+
   const { data: session } = useSession()
   console.log(session)
   return (
@@ -25,6 +31,13 @@ export default function Home() {
               {session ? (<span style={{ display: 'flex', justifyItems: 'center', alignItems: 'center' }}> Welcome <span>&nbsp; -&gt;</span>  <img src={session.user.image} alt="profile-pic" style={{ width: '3.5em', margin: '0 20px' }} /> {session.user.name}</span>) : (<>Welcome <span>-&gt; USER &nbsp;</span></>)}
             </code>
           </p>
+        
+            
+            {
+              currentTheme === 'dark' ? (<button className='bg-white p-2 rounded-full text-black' onClick={() => setTheme('light')}><BsSun fontSize={22} /></button>) : (<button className='bg-slate-900 text-white p-2 rounded-full ' onClick={() => setTheme('dark')}><BsMoon /></button>)
+            }
+
+        
           <div>{session ? (<button style={{ padding: '5px 20px' }} onClick={() => signOut()}>Sign out</button>) : (<button style={{ padding: '5px 20px' }} onClick={() => signIn()}>Sign in</button>)}</div>
         </div>
 
